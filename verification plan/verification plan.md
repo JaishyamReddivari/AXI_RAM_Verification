@@ -1,10 +1,10 @@
 # Verification Plan: `axi_ram` Module
 
-**Author:** Jaishyam Reddy Reddivari
-**Date:** February 2026
-**DUT Source:** [alexforencich/verilog-axi](https://github.com/alexforencich/verilog-axi) — `rtl/axi_ram.v`
-**Methodology:** UVM 1.2, SystemVerilog, constrained-random + directed
-**Spec Reference:** ARM IHI0022E/H — AMBA AXI Protocol Specification, Part A (AXI4)
+- **Author:** Jaishyam Reddy Reddivari
+- **Date:** February 2026
+- **DUT Source:** [alexforencich/verilog-axi](https://github.com/alexforencich/verilog-axi) — `rtl/axi_ram.v`
+- **Methodology:** UVM 1.2, SystemVerilog, constrained-random + directed
+- **Spec Reference:** ARM IHI0022E/H — AMBA AXI Protocol Specification, Part A (AXI4)
 
 ---
 
