@@ -184,4 +184,4 @@ exit
 
 ## Author
 
-**Jaishyam Reddy Reddivari** — [GitHub](https://github.com/JaishyamReddivari)
+**Jaishyam Reddy Reddivari**
