@@ -8,7 +8,7 @@ A complete **UVM 1.2** black-box verification environment for an AXI4-compliant 
 
 The design under test is **`axi_ram.v`** by Alex Forencich, sourced from [alexforencich/verilog-axi](https://github.com/alexforencich/verilog-axi/blob/master/rtl/axi_ram.v). No modifications were made to the RTL. The verification environment was built independently against the **ARM AMBA AXI4 specification (IHI0022E/H)**.
 
-| Property | Detail |
+| Property | Details |
 |---|---|
 | Interface | Single AXI4 slave (AW, W, B, AR, R) |
 | Burst types | FIXED, INCR (WRAP not supported) |
