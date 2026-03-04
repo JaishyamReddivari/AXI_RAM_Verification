@@ -183,7 +183,7 @@ All 14 protocol assertions passed across all test runs with **zero failures**.
 | Zero UVM_ERROR/UVM_FATAL | 0 | 0 | **PASS** |
 | Scoreboard mismatches | 0 | 0 | **PASS** |
 | SVA failures | 0 | 0 | **PASS** |
-| Coverage targets met | Per Sec 4.6 | 100% all groups | **PASS** |
+| Coverage targets met | Per Sec 4.6 | 97.2% all groups | **PASS** |
 | All tests pass all configs | Yes | Yes | **PASS** |
 
 ### **OVERALL REGRESSION: PASS ✅**
