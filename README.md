@@ -80,7 +80,7 @@ Full feature-by-feature traceability is in the [Verification Plan](verification%
 | UVM_ERROR / UVM_FATAL | **0** |
 | Scoreboard mismatches | **0** |
 | SVA failures | **0** |
-| Functional coverage | **100%** (all 5 covergroups) |
+| Functional coverage | **97.2%** (all 5 covergroups) |
 
 ### Regression Configurations
 
