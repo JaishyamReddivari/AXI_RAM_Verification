@@ -70,7 +70,7 @@ package axi_ram_pkg;
     constraint c_strb_default { foreach (wstrb[i]) wstrb[i] == {AXI_STRB_W{1'b1}}; }
     constraint c_addr_align   { addr[1:0] == 2'b00; rd_addr[1:0] == 2'b00; }
     constraint c_bp_default   { bready_delay inside {[0:3]}; rready_delay inside {[0:3]}; }
-    constraint c_wvalid_default { wvalid_delay == 0; }   // [FIX6]
+    constraint c_wvalid_default { wvalid_delay == 0; }
     constraint c_w_order      { w_before_aw == 0; }
     constraint c_txn_default  { txn_type != AXI_WRITE_READ; }
 
@@ -103,7 +103,7 @@ package axi_ram_pkg;
       wdata = t.wdata; wstrb = t.wstrb;
       rdata = t.rdata; rresp = t.rresp; bresp = t.bresp;
       bready_delay = t.bready_delay; rready_delay = t.rready_delay;
-      wvalid_delay = t.wvalid_delay;   // [FIX6]
+      wvalid_delay = t.wvalid_delay;
       w_before_aw = t.w_before_aw;
       rd_id = t.rd_id; rd_addr = t.rd_addr; rd_len = t.rd_len;
       rd_size = t.rd_size; rd_burst = t.rd_burst;
