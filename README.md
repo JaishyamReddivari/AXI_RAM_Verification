@@ -147,7 +147,7 @@ Initial random stimulus left bins unhit: long burst lengths, unaligned addresses
 AXI_RAM_Verification/
 ├── README.md
 ├── design/                                  # DUT source
-│   └── axi_ram.sv                           # axi_ram (from alexforencich)
+│   └── axi_ram.v                            # axi_ram (from alexforencich)
 ├── verification/                            # UVM testbench
 │   └── axi_if.sv                            # axi interface
 |   └── axi_protocol_sva.sv                  # axi SV Assertions
@@ -158,7 +158,7 @@ AXI_RAM_Verification/
     └── verification report/                 # Vreport
 ```
 
-**Note:** On EDA Playground (two-file limit), the SVA module is appended to `design.sv` after the DUT. In a production environment, `axi_protocol_sva.sv` would be compiled as a separate file.
+**Note:** On EDA Playground (two-file limit), the SVA module is appended to `design.v` after the DUT. In a production environment, `axi_protocol_sva.sv` would be compiled as a separate file.
 
 ---
 
@@ -168,7 +168,7 @@ AXI_RAM_Verification/
 
 **Platform:** [EDA Playground](https://www.edaplayground.com) → Aldec Riviera-PRO, UVM 1.2
 
-1. Paste `design.sv` and `testbench.sv` into the two editor tabs
+1. Paste `design.v` and `testbench.sv` into the two editor tabs
 2. Set **Compile Options** for desired config (e.g., `+define+CFG_PIPELINE`)
 3. Use this `run.do`:
 
