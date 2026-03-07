@@ -340,10 +340,12 @@ These are interface-level protocol assertions, placed in the `axi_protocol_sva` 
 | SVA-08 | Reset clears outputs | On rst assertion, AWREADY, WREADY, BVALID, ARREADY, RVALID must all deassert within 1 cycle of rst deassertion |
 | SVA-09 | BRESP valid range | BRESP must be 2'b00 (OKAY) for all normal accesses |
 | SVA-10 | RRESP valid range | RRESP must be 2'b00 (OKAY) for all normal accesses |
-| SVA-11 | BID stable | BID must not change while BVALID=1 and BREADY=0 |
-| SVA-12 | RID stable | RID must not change while RVALID=1 and RREADY=0 |
-| SVA-13 | RLAST stable | RLAST must not change while RVALID=1 and RREADY=0 |
+| SVA-11 | BID stable | BID must not change while BVALID=1 and BREADY=0. *Implementation: covered by SVA-02 (`p_b_stable` checks `$stable(bid) && $stable(bresp)`)* |
+| SVA-12 | RID stable | RID must not change while RVALID=1 and RREADY=0. *Implementation: covered by SVA-02 (`p_r_stable` checks `$stable(rid)`)* |
+| SVA-13 | RLAST stable | RLAST must not change while RVALID=1 and RREADY=0. *Implementation: covered by SVA-02 (`p_r_stable` checks `$stable(rlast)`)* |
 | SVA-14 | No RVALID before ARREADY | RVALID must not assert for a transaction before the corresponding AR handshake completes |
+
+**Implementation note:** SVA-11, SVA-12, and SVA-13 are not given separate assertion labels in the RTL code because they are fully subsumed by SVA-02's payload stability checks. The SVA code numbers from SVA-10 directly to SVA-14. The functional intent of all 14 assertions is covered.
 
 ---
 
