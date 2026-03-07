@@ -1,6 +1,6 @@
 # AXI4 Slave RAM — UVM Verification Environment
 
-A complete **UVM 1.2** black-box verification environment for an AXI4-compliant single-port slave RAM. Features constrained-random and directed stimulus, a byte-accurate scoreboard reference model, 14 SVA protocol assertions, and 100% functional coverage closure across 5 parameterized configurations.
+A complete **UVM 1.2** black-box verification environment for an AXI4-compliant single-port slave RAM. Features constrained-random and directed stimulus, a byte-accurate scoreboard reference model, 14 SVA protocol assertions, and functional coverage closure across 5 parameterized configurations. Verified with **2500 random seeds** (500 on Aldec Riviera-PRO, 2000 on Synopsys VCS) with zero failures.
 
 ---
 
@@ -77,10 +77,23 @@ Full feature-by-feature traceability is in the [Verification Plan](verification%
 | Metric | Result |
 |---|---|
 | Tests | **22/22 pass** (all configs) |
+| Multi-seed regression | **2500 seeds, 0 failures** (500 Riviera-PRO + 2000 VCS) |
 | UVM_ERROR / UVM_FATAL | **0** |
 | Scoreboard mismatches | **0** |
 | SVA failures | **0** |
-| Functional coverage | **97.2%** (all 5 covergroups) |
+| Functional coverage | **97.5%** overall (see breakdown below) |
+
+### Functional Coverage Breakdown
+
+| Covergroup | Achieved |
+|---|---|
+| `cg_txn` (type, burst, size, len, id + crosses) | **100.00%** |
+| `cg_addr` (alignment, region, near-4KB, top-of-mem) | **87.50%** |
+| `cg_wstrb` (all-on, all-off, single-byte, partial) | **100.00%** |
+| `cg_bp` (bready delay, rready delay) | **100.00%** |
+| `cg_concurrency` (AW+AR simul, W-before-AW, RAW gap) | **100.00%** |
+
+`cg_addr` reaches 87.50% under `axi_stress_test` alone — the `cp_addr_top_of_mem.near_top` bin (addresses >= 0xFFF0) is hit by the directed `axi_addr_boundary_test`. Full regression suite achieves 100%.
 
 ### Regression Configurations
 
@@ -124,7 +137,7 @@ Rather than runtime checking, the 4KB boundary rule is enforced at the constrain
 
 ### Coverage Closure Strategy
 
-Initial random stimulus left bins unhit: long burst lengths, unaligned addresses, near-4KB regions, and medium backpressure delays. A dedicated `axi_cov_fill_seq` targets these specific bins first, then random stress follows. This hybrid approach achieved 100% efficiently. Concurrency coverage (AW+AR simultaneous, W-before-AW) required explicit sampling after scenario execution due to simulator timing limitations with bus-level detection.
+Initial random stimulus left bins unhit: long burst lengths, unaligned addresses, near-4KB regions, and medium backpressure delays. A dedicated `axi_cov_fill_seq` targets these specific bins first, then random stress follows. This hybrid approach achieved 100% efficiently on 4 of 5 covergroups. The remaining `cg_addr` gap (87.50%) in the stress test is due to the `cp_addr_top_of_mem.near_top` bin requiring addresses in a very narrow range (>= 0xFFF0); this is covered by the directed `axi_addr_boundary_test` in the full regression. Concurrency coverage (AW+AR simultaneous, W-before-AW) required explicit sampling after scenario execution due to simulator timing limitations with bus-level detection.
 
 ---
 
@@ -133,40 +146,41 @@ Initial random stimulus left bins unhit: long burst lengths, unaligned addresses
 ```
 AXI_RAM_Verification/
 ├── README.md
-├── design/                                  # DUT source (from alexforencich/verilog-axi)
-│   └── axi_ram.v
-├── verification/                            # UVM testbench files
-│   ├── axi_if.sv                            #   AXI4 interface
-│   ├── axi_ram_pkg.sv                       #   UVM package (env, agent, seqs, tests)
-│   ├── axi_protocol_sva.sv                  #   14 SVA protocol assertions
-│   └── tb_top.sv                            #   Top-level testbench
+├── design/                                  # DUT source
+│   └── axi_ram.sv                           # axi_ram (from alexforencich)
+├── verification/                            # UVM testbench
+│   └── axi_if.sv                            # axi interface
+|   └── axi_protocol_sva.sv                  # axi SV Assertions
+|   └── axi_ram_pkg.sv                       # UVM package for axi (env, agent, seqs, tests)
+|   └── axi_tb.sv                            # axi_tb
 └── verification plan & report/
     └── verification plan/                   # Vplan
     └── verification report/                 # Vreport
 ```
 
+**Note:** On EDA Playground (two-file limit), the SVA module is appended to `design.sv` after the DUT. In a production environment, `axi_protocol_sva.sv` would be compiled as a separate file.
+
 ---
 
 ## How to Run
 
+### Aldec Riviera-PRO (EDA Playground)
+
 **Platform:** [EDA Playground](https://www.edaplayground.com) → Aldec Riviera-PRO, UVM 1.2
 
-1. Add all source files from `design/` and `verification/`
+1. Paste `design.sv` and `testbench.sv` into the two editor tabs
 2. Set **Compile Options** for desired config (e.g., `+define+CFG_PIPELINE`)
 3. Use this `run.do`:
 
 ```tcl
-vsim +access+r +UVM_TESTNAME=axi_stress_test work.tb_top
+vsim +access+r +UVM_TESTNAME=axi_stress_test work.axi_tb
 run -all
 exit
 ```
 
-Change `+UVM_TESTNAME=` to run any of the 22 tests.
-
 **With coverage:**
-
 ```tcl
-vsim +access+r +UVM_TESTNAME=axi_stress_test work.tb_top
+vsim +access+r +UVM_TESTNAME=axi_stress_test work.axi_tb
 run -all
 acdb save
 acdb report -db fcover.acdb -txt -o cov.txt -verbose
@@ -174,11 +188,37 @@ exec cat cov.txt
 exit
 ```
 
+### Synopsys VCS (EDA Playground or Local)
+
+**Compile Options:**
+```
+-timescale=1ns/1ns +vcs+flush+all +warn=all -sverilog -cm line+cond+fsm+tgl+branch+assert
+```
+
+**Run Options:**
+```
++UVM_TESTNAME=axi_stress_test
+```
+
+**Multi-seed regression (local):**
+```bash
+for seed in $(seq 1 2000); do
+  ./simv +UVM_TESTNAME=axi_stress_test +ntb_random_seed=$seed
+done
+```
+
+**Coverage report (local VCS):**
+```bash
+urg -dir simv.vdb -report coverage_report
+```
+
+Change `+UVM_TESTNAME=` to run any of the 22 tests.
+
 ---
 
 ## Technologies
 
-**SystemVerilog** · **UVM 1.2** · **SVA** · **Aldec Riviera-PRO** · **AXI4 (ARM IHI0022E/H)**
+**SystemVerilog** · **UVM 1.2** · **SVA** · **Aldec Riviera-PRO** · **Synopsys VCS** · **AXI4 (ARM IHI0022E/H)**
 
 ---
 
