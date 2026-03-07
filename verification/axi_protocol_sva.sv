@@ -317,6 +317,3 @@ module axi_protocol_sva #(
     else $error("SVA-14: RVALID asserted with no pending AR transaction");
 
 endmodule
-
-
-// NOTE: Add the bind statement in tb_top.sv (see below)
