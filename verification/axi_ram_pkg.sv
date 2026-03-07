@@ -617,6 +617,18 @@ package axi_ram_pkg;
         end
       end
     endtask
+    
+    function void report_phase(uvm_phase phase);
+      `uvm_info("COV", "========== FUNCTIONAL COVERAGE REPORT ==========", UVM_NONE)
+      `uvm_info("COV", $sformatf("  cg_txn         : %.2f%%", cg_txn.get_coverage()), UVM_NONE)
+      `uvm_info("COV", $sformatf("  cg_addr        : %.2f%%", cg_addr.get_coverage()), UVM_NONE)
+      `uvm_info("COV", $sformatf("  cg_wstrb       : %.2f%%", cg_wstrb.get_coverage()), UVM_NONE)
+      `uvm_info("COV", $sformatf("  cg_bp          : %.2f%%", cg_bp.get_coverage()), UVM_NONE)
+      `uvm_info("COV", $sformatf("  cg_concurrency : %.2f%%", cg_concurrency.get_coverage()), UVM_NONE)
+      `uvm_info("COV", "=================================================", UVM_NONE)
+
+    endfunction
+    
   endclass
 
   //  AGENT
