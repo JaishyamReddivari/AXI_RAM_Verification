@@ -1,6 +1,6 @@
 # AXI4 Slave RAM — UVM Verification Environment
 
-A complete **UVM 1.2** black-box verification environment for an AXI4-compliant single-port slave RAM. Features constrained-random and directed stimulus, a byte-accurate scoreboard reference model, 14 SVA protocol assertions, and functional coverage closure across 5 parameterized configurations. Verified with **2500 random seeds** (500 on Aldec Riviera-PRO, 2000 on Synopsys VCS) with zero failures.
+A complete **UVM 1.2** black-box verification environment for an AXI4-compliant single-port slave RAM. Features constrained-random and directed stimulus, a byte-accurate scoreboard reference model, 14 SVA protocol assertions, and functional coverage closure across 5 parameterized configurations. Verified on Aldec Riviera-PRO and Synopsys VCS with zero failures.
 
 ---
 
@@ -77,7 +77,6 @@ Full feature-by-feature traceability is in the [Verification Plan](verification%
 | Metric | Result |
 |---|---|
 | Tests | **22/22 pass** (all configs) |
-| Multi-seed regression | **2500 seeds, 0 failures** (500 Riviera-PRO + 2000 VCS) |
 | UVM_ERROR / UVM_FATAL | **0** |
 | Scoreboard mismatches | **0** |
 | SVA failures | **0** |
